@@ -12,8 +12,8 @@ $role = $_SESSION['role'] ?? 'guest';
 
     <a class="navbar-brand" 
        href="<?php echo ($role == 'admin') 
-         ? '/quiz_app/admin/dashboard.php' 
-         : '/quiz_app/user/dashboard.php'; ?>">
+         ? '/quiz-app/admin/' 
+         : '/quiz-app/user/'; ?>">
       Online Quiz System
     </a>
 
