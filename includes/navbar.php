@@ -5,16 +5,27 @@ if (!isset($_SESSION)) {
 
 // Default role if not logged in
 $role = $_SESSION['role'] ?? 'guest';
+// Detect whether the current page is in /admin/ folder
+$is_admin_page = strpos($_SERVER['REQUEST_URI'], '/quiz-app/admin/') !== false;
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
 
-    <a class="navbar-brand" 
-       href="<?php echo ($role == 'admin') 
-         ? '/quiz-app/admin/' 
-         : '/quiz-app/user/'; ?>">
-      Online Quiz System
+    <a class="navbar-brand"
+      href="<?php
+            if ($role === 'admin') {
+                echo '/quiz-app/admin/';
+            } else if ($is_admin_page) {
+                // user not logged in but on admin page → go to admin index
+                echo '/quiz-app/admin/';
+            } else if ($role === 'user') {
+                echo '/quiz-app/user/';
+            } else {
+                echo '/quiz-app/auth/login.php';
+            }
+        ?>">
+        Online Quiz System
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
