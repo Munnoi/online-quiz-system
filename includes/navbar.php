@@ -3,21 +3,20 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
-// Default role if not logged in
 $role = $_SESSION['role'] ?? 'guest';
-// Detect whether the current page is in /admin/ folder
 $is_admin_page = strpos($_SERVER['REQUEST_URI'], '/quiz-app/admin/') !== false;
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<link rel="stylesheet" href="/quiz-app/assets/css/navbar.css">
+
+<nav class="custom-navbar navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
   <div class="container-fluid">
 
-    <a class="navbar-brand"
+    <a class="navbar-brand fw-bold d-flex align-items-center brand-glow"
       href="<?php
             if ($role === 'admin') {
                 echo '/quiz-app/admin/';
             } else if ($is_admin_page) {
-                // user not logged in but on admin page → go to admin index
                 echo '/quiz-app/admin/';
             } else if ($role === 'user') {
                 echo '/quiz-app/user/';
@@ -25,6 +24,7 @@ $is_admin_page = strpos($_SERVER['REQUEST_URI'], '/quiz-app/admin/') !== false;
                 echo '/quiz-app/auth/login.php';
             }
         ?>">
+        <span class="brand-icon me-2">📚</span>
         Online Quiz System
     </a>
 
@@ -33,58 +33,55 @@ $is_admin_page = strpos($_SERVER['REQUEST_URI'], '/quiz-app/admin/') !== false;
     </button>
 
     <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
 
-        <?php if ($role == 'admin'): ?>
+        <?php if ($role === 'admin'): ?>
 
-          <!-- Admin Links -->
           <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/admin/view_quizzes.php">Quizzes</a>
+            <a class="nav-link nav-item-anim" href="/quiz-app/admin/view_quizzes.php">Quizzes</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/admin/view_questions.php">Questions</a>
+            <a class="nav-link nav-item-anim" href="/quiz-app/admin/manage_users.php">Users</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/admin/manage_users.php">Users</a>
+            <a class="nav-link nav-item-anim" href="/quiz-app/admin/view_results.php">Results</a>
+          </li>
+
+        <?php elseif ($role === 'user'): ?>
+
+          <li class="nav-item">
+            <a class="nav-link nav-item-anim" href="/quiz-app/user/quiz_list.php">Quizzes</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/admin/view_results.php">Results</a>
-          </li>
-
-        <?php elseif ($role == 'user'): ?>
-
-          <!-- User Links -->
-          <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/user/quiz_list.php">Quizzes</a>
+            <a class="nav-link nav-item-anim" href="/quiz-app/user/history.php">History</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/user/history.php">History</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/user/result.php">Results</a>
+            <a class="nav-link nav-item-anim" href="/quiz-app/user/result.php">Results</a>
           </li>
 
         <?php endif; ?>
 
-        <?php if ($role == 'guest'): ?>
-          <!-- Guest Links -->
+
+        <?php if ($role === 'guest'): ?>
+
           <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/auth/login.php">Login</a>
+            <a class="nav-link nav-item-anim" href="/quiz-app/auth/login.php">Login</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/quiz-app/auth/register.php">Register</a>
+            <a class="nav-link nav-item-anim" href="/quiz-app/auth/register.php">Register</a>
           </li>
+
         <?php else: ?>
-          <!-- Logout -->
+
           <li class="nav-item">
-            <a class="nav-link text-danger" href="/quiz-app/auth/logout.php">Logout</a>
+            <a class="nav-link nav-item-anim logout-link" href="/quiz-app/auth/logout.php">Logout</a>
           </li>
+
         <?php endif; ?>
 
       </ul>

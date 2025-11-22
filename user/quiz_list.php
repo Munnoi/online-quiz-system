@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 include("../includes/header.php");
 
-// Fetch all quizzes with category name
+// Fetch quizzes
 $query = mysqli_query($conn, "
     SELECT quizzes.*, categories.name AS category_name
     FROM quizzes
@@ -18,9 +18,9 @@ $query = mysqli_query($conn, "
 ");
 ?>
 
-<div class="container mt-4">
+<div class="page-content">
 
-    <h2 class="mb-4 text-center">Available Quizzes</h2>
+    <h2 class="text-center mb-4 quiz-title">Available Quizzes</h2>
 
     <?php if (mysqli_num_rows($query) == 0): ?>
         <div class="alert alert-warning text-center">
@@ -28,43 +28,38 @@ $query = mysqli_query($conn, "
         </div>
     <?php else: ?>
 
-        <div class="row">
+        <div class="quiz-grid row">
 
             <?php while ($quiz = mysqli_fetch_assoc($query)): ?>
 
                 <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm h-100">
+                    <div class="quiz-card">
 
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo $quiz['title']; ?></h5>
+                        <h4 class="quiz-card-title"><?php echo $quiz['title']; ?></h4>
 
-                            <p class="card-text text-muted">
-                                <?php echo $quiz['description']; ?>
-                            </p>
+                        <p class="quiz-card-desc">
+                            <?php echo $quiz['description']; ?>
+                        </p>
 
-                            <p class="mb-1">
-                                <strong>Category:</strong>
-                                <?php echo $quiz['category_name'] ?? "Uncategorized"; ?>
-                            </p>
+                        <p class="quiz-card-info">
+                            <strong>Category:</strong>
+                            <?php echo $quiz['category_name'] ?? "Uncategorized"; ?>
+                        </p>
 
-                            <p class="mb-1">
-                                <strong>Total Questions:</strong>
-                                <?php echo $quiz['total_questions']; ?>
-                            </p>
+                        <p class="quiz-card-info">
+                            <strong>Total Questions:</strong>
+                            <?php echo $quiz['total_questions']; ?>
+                        </p>
 
-                            <p>
-                                <strong>Time Limit:</strong>
-                                <?php echo $quiz['time_limit']; ?> minutes
-                            </p>
+                        <p class="quiz-card-info">
+                            <strong>Time Limit:</strong>
+                            <?php echo $quiz['time_limit']; ?> minutes
+                        </p>
 
-                        </div>
-
-                        <div class="card-footer bg-transparent text-center">
-                            <a href="take_quiz.php?quiz_id=<?php echo $quiz['quiz_id']; ?>"
-                               class="btn btn-primary w-100">
-                                Start Quiz
-                            </a>
-                        </div>
+                        <a href="take_quiz.php?quiz_id=<?php echo $quiz['quiz_id']; ?>"
+                           class="btn btn-primary w-100 quiz-btn">
+                           Start Quiz
+                        </a>
 
                     </div>
                 </div>

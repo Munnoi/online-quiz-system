@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -10,53 +9,52 @@ if (!isset($_SESSION['user_id'])) {
 include("../includes/header.php");
 ?>
 
-<div class="container mt-5">
-    <div class="p-4 bg-light shadow rounded">
+<div class="page-content">
 
-        <h2 class="mb-3">Welcome, <?php echo $_SESSION['name']; ?> 👋</h2>
-        <p class="text-muted">This is your dashboard.</p>
+    <div class="dashboard-container">
 
-        <hr>
+        <h2 class="dashboard-title">
+            Welcome, <?php echo $_SESSION['name']; ?> 👋
+        </h2>
 
-        <div class="row">
+        <p class="dashboard-subtitle">
+            This is your personal dashboard — choose where to go next.
+        </p>
 
-            <div class="col-md-4 mb-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h5 class="card-title">My Profile</h5>
-                        <p class="card-text">View and edit your account details.</p>
-                        <a href="profile.php" class="btn btn-primary">Open</a>
-                    </div>
+        <div class="dashboard-cards row">
+
+            <div class="col-md-4 mb-4">
+                <div class="dash-card">
+                    <h5 class="dash-card-title">My Profile</h5>
+                    <p class="dash-card-text">View and update your account details.</p>
+                    <a href="profile.php" class="btn btn-primary dash-btn">Open</a>
                 </div>
             </div>
 
-            <div class="col-md-4 mb-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h5 class="card-title">Available Quizzes</h5>
-                        <p class="card-text">Attempt quizzes assigned to you.</p>
-                        <a href="quiz_list.php" class="btn btn-success">View</a>
-                    </div>
+            <div class="col-md-4 mb-4">
+                <div class="dash-card">
+                    <h5 class="dash-card-title">Available Quizzes</h5>
+                    <p class="dash-card-text">Attempt quizzes assigned to you.</p>
+                    <a href="quiz_list.php" class="btn btn-success dash-btn">View</a>
                 </div>
             </div>
 
-            <div class="col-md-4 mb-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h5 class="card-title">My Results</h5>
-                        <p class="card-text">Check your completed quiz scores.</p>
-                        <a href="result.php" class="btn btn-info">Check</a>
-                    </div>
+            <div class="col-md-4 mb-4">
+                <div class="dash-card">
+                    <h5 class="dash-card-title">My Results</h5>
+                    <p class="dash-card-text">Check your quiz performance.</p>
+                    <a href="result.php" class="btn btn-info dash-btn">Check</a>
                 </div>
             </div>
 
         </div>
 
-        <hr>
-
-        <a href="logout.php" class="btn btn-danger mt-3">Logout</a>
+        <div class="mt-4 text-center">
+            <a href="logout.php" class="btn btn-danger dash-btn">Logout</a>
+        </div>
 
     </div>
+
 </div>
 
 <?php include("../includes/footer.php"); ?>

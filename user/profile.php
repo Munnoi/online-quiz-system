@@ -2,7 +2,6 @@
 session_start();
 include("../config/db.php");
 
-// User must be logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../auth/login.php");
     exit;
@@ -11,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $message = "";
 
-// Fetch current user data
+// Fetch user info
 $userQuery = mysqli_query($conn, "SELECT * FROM users WHERE user_id = $user_id");
 $user = mysqli_fetch_assoc($userQuery);
 
@@ -20,8 +19,7 @@ if (isset($_POST['update_profile'])) {
     $name  = mysqli_real_escape_string($conn, $_POST['name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
 
-    // Check if email belongs to someone else
-    $checkEmail = mysqli_query($conn, 
+    $checkEmail = mysqli_query($conn,
         "SELECT * FROM users WHERE email='$email' AND user_id != $user_id"
     );
 
@@ -31,9 +29,8 @@ if (isset($_POST['update_profile'])) {
         $update = mysqli_query($conn,
             "UPDATE users SET name='$name', email='$email' WHERE user_id=$user_id"
         );
-
         if ($update) {
-            $_SESSION['name'] = $name; // update session name
+            $_SESSION['name'] = $name;
             $message = "Profile updated successfully!";
         } else {
             $message = "Failed to update profile!";
@@ -46,7 +43,6 @@ if (isset($_POST['update_password'])) {
     $old_pass = $_POST['old_password'];
     $new_pass = $_POST['new_password'];
 
-    // Check old password
     if (!password_verify($old_pass, $user['password'])) {
         $message = "Old password is incorrect!";
     } else {
@@ -68,66 +64,68 @@ if (isset($_POST['update_password'])) {
 
 <?php include("../includes/header.php"); ?>
 
-<div class="container mt-4" style="max-width: 600px;">
+<div class="page-content d-flex justify-content-center">
 
-    <h2 class="mb-4 text-center">My Profile</h2>
+    <div class="profile-container">
 
-    <?php if ($message != ""): ?>
-        <div class="alert alert-info">
-            <?php echo $message; ?>
+        <h2 class="text-center mb-4 profile-title">My Profile</h2>
+
+        <?php if ($message != ""): ?>
+            <div class="alert alert-info text-center mb-4"><?php echo $message; ?></div>
+        <?php endif; ?>
+
+        <!-- Profile Update Card -->
+        <div class="profile-card mb-4">
+            <h4 class="profile-card-header">Update Profile</h4>
+
+            <div class="profile-card-body">
+                <form action="" method="POST">
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">Full Name</label>
+                        <input type="text" name="name" 
+                               value="<?php echo $user['name']; ?>" 
+                               class="form-control auth-input" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">Email Address</label>
+                        <input type="email" name="email" 
+                               value="<?php echo $user['email']; ?>" 
+                               class="form-control auth-input" required>
+                    </div>
+
+                    <button type="submit" name="update_profile" class="btn btn-primary w-100 btn-custom">
+                        Update Profile
+                    </button>
+                </form>
+            </div>
         </div>
-    <?php endif; ?>
 
-    <!-- Profile Update Form -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            Update Profile
+        <!-- Password Update Card -->
+        <div class="profile-card">
+            <h4 class="profile-card-header">Change Password</h4>
+
+            <div class="profile-card-body">
+                <form action="" method="POST">
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">Old Password</label>
+                        <input type="password" name="old_password" class="form-control auth-input" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">New Password</label>
+                        <input type="password" name="new_password" class="form-control auth-input" required minlength="6">
+                    </div>
+
+                    <button type="submit" name="update_password" class="btn btn-warning w-100 btn-custom">
+                        Update Password
+                    </button>
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <form action="" method="POST">
 
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="name" value="<?php echo $user['name']; ?>" 
-                           class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" name="email" value="<?php echo $user['email']; ?>" 
-                           class="form-control" required>
-                </div>
-
-                <button type="submit" name="update_profile" class="btn btn-success w-100">
-                    Update Profile
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Password Update Form -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
-            Change Password
-        </div>
-        <div class="card-body">
-            <form action="" method="POST">
-
-                <div class="mb-3">
-                    <label class="form-label">Old Password</label>
-                    <input type="password" name="old_password" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">New Password</label>
-                    <input type="password" name="new_password" class="form-control" required minlength="6">
-                </div>
-
-                <button type="submit" name="update_password" class="btn btn-warning w-100">
-                    Update Password
-                </button>
-            </form>
-        </div>
     </div>
 
 </div>

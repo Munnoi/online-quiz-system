@@ -1,0 +1,80 @@
+/* -----------------------------
+   CUSTOM NAVBAR THEME
+------------------------------ */
+
+.custom-navbar {
+  background: #111 !important;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 2px solid #222;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+  transition: 0.3s ease;
+}
+
+.navbar-brand {
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+}
+
+.brand-glow {
+  transition: 0.3s ease;
+}
+
+.brand-glow:hover {
+  color: #0d6efd;
+  text-shadow: 0 0 8px rgba(13, 110, 253, 0.6);
+}
+
+.brand-icon {
+  font-size: 1.5rem;
+}
+
+/* NAV LINKS */
+.nav-link {
+  position: relative;
+  font-size: 1rem;
+  padding: 0.7rem 1rem !important;
+  transition: 0.3s ease;
+}
+
+.nav-item-anim:hover {
+  color: #0d6efd !important;
+}
+
+.nav-item-anim::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 0%;
+  left: 50%;
+  bottom: 6px;
+  background: #0d6efd;
+  transition: 0.3s;
+}
+
+.nav-item-anim:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.logout-link {
+  color: #ff4e4e !important;
+  font-weight: 600;
+}
+
+.logout-link:hover {
+  color: #ff7777 !important;
+}
+
+/* RESPONSIVE TOUCH */
+@media (max-width: 991px) {
+  .nav-link {
+    padding-left: 0 !important;
+  }
+
+  .nav-item-anim::after {
+    display: none;
+  }
+}

@@ -12,15 +12,13 @@ if (isset($_POST['register'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $pass  = mysqli_real_escape_string($conn, $_POST['password']);
 
-    // Check if email already exists
     $check = mysqli_query($conn, "SELECT * FROM users WHERE email='$email'");
+
     if (mysqli_num_rows($check) > 0) {
         $message = "Email already registered!";
     } else {
-        // Hash password
         $hashed = password_hash($pass, PASSWORD_DEFAULT);
 
-        // Insert into DB
         $insert = mysqli_query($conn,
             "INSERT INTO users (name, email, password, role, created_at)
              VALUES ('$name', '$email', '$hashed', 'user', NOW())"
@@ -38,39 +36,45 @@ if (isset($_POST['register'])) {
 
 <?php include("../includes/header.php"); ?>
 
-<div class="container mt-5" style="max-width: 500px;">
+<div class="page-content d-flex justify-content-center align-items-center">
 
-    <h2 class="text-center mb-4">Create an Account</h2>
+    <div class="auth-card">
 
-    <?php if ($message != ""): ?>
-        <div class="alert alert-danger"><?php echo $message; ?></div>
-    <?php endif; ?>
+        <h2 class="text-center mb-4 auth-title">Create an Account</h2>
 
-    <form action="" method="POST" class="border p-4 rounded bg-light shadow-sm">
+        <?php if ($message != ""): ?>
+            <div class="alert alert-danger text-center mb-3"><?php echo $message; ?></div>
+        <?php endif; ?>
 
-        <div class="mb-3">
-            <label class="form-label">Full Name</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
+        <form action="" method="POST">
 
-        <div class="mb-3">
-            <label class="form-label">Email Address</label>
-            <input type="email" name="email" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-light">Full Name</label>
+                <input type="text" name="name" class="form-control auth-input" required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" required minlength="6">
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-light">Email Address</label>
+                <input type="email" name="email" class="form-control auth-input" required>
+            </div>
 
-        <input value="Register" type="submit" name="register" class="btn btn-primary w-100">
+            <div class="mb-3">
+                <label class="form-label text-light">Password</label>
+                <input type="password" name="password" class="form-control auth-input" required minlength="6">
+            </div>
 
-        <p class="text-center mt-3">
-            Already have an account?
-            <a href="login.php">Login here</a>
-        </p>
+            <button type="submit" name="register" class="btn btn-primary w-100 btn-custom">
+                Register
+            </button>
 
-    </form>
+            <p class="text-center mt-3 text-light">
+                Already have an account?
+                <a href="login.php" class="auth-link">Login here</a>
+            </p>
+
+        </form>
+    </div>
+
 </div>
 
 <?php include("../includes/footer.php"); ?>

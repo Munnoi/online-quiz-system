@@ -14,9 +14,7 @@ $quiz_id = $_GET['quiz_id'] ?? 0;
 $quizQuery = mysqli_query($conn, "SELECT * FROM quizzes WHERE quiz_id = $quiz_id");
 $quiz = mysqli_fetch_assoc($quizQuery);
 
-if (!$quiz) {
-    die("Quiz not found.");
-}
+if (!$quiz) { die("Quiz not found."); }
 
 // Fetch questions
 $questionsQuery = mysqli_query($conn, "
@@ -32,67 +30,55 @@ if (mysqli_num_rows($questionsQuery) == 0) {
 include("../includes/header.php");
 ?>
 
-<div class="container mt-4">
+<div class="page-content">
 
-    <h2 class="text-center mb-4"><?php echo $quiz['title']; ?></h2>
+    <div class="quiz-header-box text-center">
+        <h2 class="quiz-title"><?php echo $quiz['title']; ?></h2>
 
-    <div class="alert alert-info text-center">
-        Total Questions: <strong><?php echo $quiz['total_questions']; ?></strong> |
-        Time Limit: <strong><?php echo $quiz['time_limit']; ?> minutes</strong>
+        <div class="quiz-meta">
+            <span>Total Questions: <strong><?php echo $quiz['total_questions']; ?></strong></span>
+            <span class="mx-3">|</span>
+            <span>Time Limit: <strong><?php echo $quiz['time_limit']; ?> minutes</strong></span>
+        </div>
     </div>
 
     <!-- QUIZ FORM -->
     <form action="submit_quiz.php" method="POST">
-
         <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>">
 
         <?php 
         $i = 1;
-        while ($q = mysqli_fetch_assoc($questionsQuery)): 
-        ?>
+        while ($q = mysqli_fetch_assoc($questionsQuery)): ?>
 
-            <div class="card mb-4 shadow-sm">
-                <div class="card-body">
+            <div class="quiz-question-card mb-4">
 
-                    <h5>Q<?php echo $i; ?>. <?php echo $q['question_text']; ?></h5>
+                <h5 class="quiz-q-title">Q<?php echo $i; ?>. <?php echo $q['question_text']; ?></h5>
 
-                    <div class="form-check mt-2">
-                        <input class="form-check-input" type="radio" 
-                               name="answer[<?php echo $q['question_id']; ?>]" 
-                               value="A" required>
-                        <label class="form-check-label"><?php echo $q['option_a']; ?></label>
-                    </div>
+                <label class="quiz-option">
+                    <input type="radio" name="answer[<?php echo $q['question_id']; ?>]" value="A" required>
+                    <span><?php echo $q['option_a']; ?></span>
+                </label>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" 
-                               name="answer[<?php echo $q['question_id']; ?>]" 
-                               value="B">
-                        <label class="form-check-label"><?php echo $q['option_b']; ?></label>
-                    </div>
+                <label class="quiz-option">
+                    <input type="radio" name="answer[<?php echo $q['question_id']; ?>]" value="B">
+                    <span><?php echo $q['option_b']; ?></span>
+                </label>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" 
-                               name="answer[<?php echo $q['question_id']; ?>]" 
-                               value="C">
-                        <label class="form-check-label"><?php echo $q['option_c']; ?></label>
-                    </div>
+                <label class="quiz-option">
+                    <input type="radio" name="answer[<?php echo $q['question_id']; ?>]" value="C">
+                    <span><?php echo $q['option_c']; ?></span>
+                </label>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" 
-                               name="answer[<?php echo $q['question_id']; ?>]" 
-                               value="D">
-                        <label class="form-check-label"><?php echo $q['option_d']; ?></label>
-                    </div>
+                <label class="quiz-option">
+                    <input type="radio" name="answer[<?php echo $q['question_id']; ?>]" value="D">
+                    <span><?php echo $q['option_d']; ?></span>
+                </label>
 
-                </div>
             </div>
 
-        <?php 
-        $i++;
-        endwhile; 
-        ?>
+        <?php $i++; endwhile; ?>
 
-        <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+        <button type="submit" class="btn btn-primary btn-lg w-100 quiz-submit-btn">
             Submit Quiz
         </button>
 
