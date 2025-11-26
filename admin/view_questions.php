@@ -2,24 +2,24 @@
 session_start();
 include("../config/db.php");
 
-// Only admin can access
+// Allow only admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: index.php");
     exit;
 }
 
+// Get quiz ID
 $quiz_id = $_GET['quiz_id'] ?? 0;
 
-// Fetch quiz name
+// Fetch quiz details
 $quizQuery = mysqli_query($conn, "SELECT title FROM quizzes WHERE quiz_id = $quiz_id");
 $quiz = mysqli_fetch_assoc($quizQuery);
 
-// If quiz doesn't exist
 if (!$quiz) {
     die("Quiz not found.");
 }
 
-// Fetch all questions for this quiz
+// Fetch questions of this quiz
 $questionsQuery = mysqli_query($conn, "
     SELECT * FROM questions 
     WHERE quiz_id = $quiz_id
@@ -35,6 +35,14 @@ include("../includes/header.php");
         Questions for: <span class="text-primary"><?php echo $quiz['title']; ?></span>
     </h2>
 
+    <?php if (isset($_GET['added'])): ?>
+        <div class="alert alert-success text-center">Question added successfully!</div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['deleted'])): ?>
+        <div class="alert alert-danger text-center">Question deleted successfully!</div>
+    <?php endif; ?>
+
     <div class="text-end mb-3">
         <a href="add_question.php?quiz_id=<?php echo $quiz_id; ?>" 
            class="btn btn-success">Add New Question</a>
@@ -43,67 +51,60 @@ include("../includes/header.php");
     <?php if (mysqli_num_rows($questionsQuery) == 0): ?>
 
         <div class="alert alert-warning text-center">
-            No questions found. Add one now!
+            No questions found. Add some now!
         </div>
 
     <?php else: ?>
 
-            <div class="admin-table-wrapper">
-                <table class="table-dark-aesthetic">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Question</th>
-                            <th>Options</th>
-                            <th>Correct</th>
-                            <th>Marks</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
+        <table class="table-dark-aesthetic table-bordered table-hover shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Question</th>
+                    <th>Options</th>
+                    <th>Correct</th>
+                    <th>Marks</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-                    <tbody>
-                        <?php 
-                        $i = 1;
-                        while ($q = mysqli_fetch_assoc($questionsQuery)): 
-                        ?>
-                        <tr>
-                            <td><?php echo $i++; ?></td>
+            <tbody>
+                <?php 
+                $i = 1;
+                while ($q = mysqli_fetch_assoc($questionsQuery)): 
+                ?>
+                <tr>
+                    <td><?php echo $i++; ?></td>
 
-                            <td><?php echo $q['question_text']; ?></td>
+                    <td><?php echo $q['question_text']; ?></td>
 
-                            <td>
-                                A. <?php echo $q['option_a']; ?><br>
-                                B. <?php echo $q['option_b']; ?><br>
-                                C. <?php echo $q['option_c']; ?><br>
-                                D. <?php echo $q['option_d']; ?>
-                            </td>
+                    <td>
+                        A: <?php echo $q['option_a']; ?><br>
+                        B: <?php echo $q['option_b']; ?><br>
+                        C: <?php echo $q['option_c']; ?><br>
+                        D: <?php echo $q['option_d']; ?>
+                    </td>
 
-                            <td class="fw-bold text-success">
-                                <?php echo $q['correct_option']; ?>
-                            </td>
+                    <td class="fw-bold text-success">
+                        <?php echo $q['correct_option']; ?>
+                    </td>
 
-                            <td><?php echo $q['marks']; ?></td>
+                    <td><?php echo $q['marks']; ?></td>
 
-                            <td>
-                                <a href="edit_question.php?question_id=<?php echo $q['question_id']; ?>&quiz_id=<?php echo $quiz_id; ?>" 
-                                    class="btn btn-sm btn-warning admin-btn">
-                                    Edit
-                                </a>
+                    <td>
+                        <a href="edit_question.php?question_id=<?php echo $q['question_id']; ?>&quiz_id=<?php echo $quiz_id; ?>" 
+                           class="btn btn-sm btn-warning mb-1">Edit</a>
 
-                                <a href="delete_question.php?question_id=<?php echo $q['question_id']; ?>&quiz_id=<?php echo $quiz_id; ?>" 
-                                    class="btn btn-sm btn-danger admin-btn"
-                                    onclick="return confirm('Delete this question?')">
-                                    Delete
-                                </a>
-                            </td>
+                        <a href="delete_question.php?question_id=<?php echo $q['question_id']; ?>&quiz_id=<?php echo $quiz_id; ?>" 
+                           onclick="return confirm('Delete this question?')"
+                           class="btn btn-sm btn-danger mb-1">Delete</a>
+                    </td>
+                </tr>
 
-                        </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-            </div>
+                <?php endwhile; ?>
 
-        </div>
+            </tbody>
+        </table>
 
     <?php endif; ?>
 

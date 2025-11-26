@@ -76,7 +76,7 @@ include("../includes/header.php");
                         <h5 class="dash-card-title">Manage Questions</h5>
                         <p class="dash-card-text">Add or modify quiz questions.</p>
                     </div>
-                    <a href="view_questions.php" class="btn btn-secondary dash-btn mt-3">Open</a>
+                    <a href="manage_all_quizzes.php" class="btn btn-secondary dash-btn mt-3">Open</a>
                 </div>
             </div>
 
